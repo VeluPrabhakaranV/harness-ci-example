@@ -57,10 +57,10 @@ pipeline:
           service:
             serviceRef: helloworld1
           environment:
-            environmentRef: preprod
+            environmentRef: prepod1
             deployToAll: false
             infrastructureDefinitions:
-              - identifier: infra
+              - identifier: infra1
           execution:
             steps:
               - step:
