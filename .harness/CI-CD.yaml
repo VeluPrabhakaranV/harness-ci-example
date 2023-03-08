@@ -60,7 +60,7 @@ pipeline:
             environmentRef: prepod1
             deployToAll: false
             infrastructureDefinitions:
-              - identifier: infra1
+              - identifier: infra2
           execution:
             steps:
               - step:
