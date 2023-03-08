@@ -32,3 +32,18 @@ pipeline:
                   spec:
                     shell: Sh
                     command: npm test
+              - step:
+                  type: Run
+                  name: docker build and push
+                  identifier: docker_build_and_push
+                  spec:
+                    shell: Sh
+                    command: |-
+                      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" docker.io
+                      ls
+                      docker build -t veluprabhakaranv/helloworld-nodejs:latest .
+                      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" docker.io
+                      docker push veluprabhakaranv/helloworld-nodejs:latest
+                    envVariables:
+                      DOCKER_USERNAME: veluprabhakaranv
+                      DOCKER_PASSWORD: Prince@1110
