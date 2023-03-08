@@ -1,0 +1,34 @@
+pipeline:
+  name: cicd11
+  identifier: cicd11
+  projectIdentifier: nodejs
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: git
+        build: <+input>
+  stages:
+    - stage:
+        name: BUILD
+        identifier: BUILD
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: test
+                  identifier: test
+                  spec:
+                    shell: Sh
+                    command: npm test
