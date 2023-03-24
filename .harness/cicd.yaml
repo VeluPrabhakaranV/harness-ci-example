@@ -1,14 +1,14 @@
 pipeline:
-  name: ci-cd-harness
-  identifier: cicdharness
-  projectIdentifier: harnessdemo
+  name: cicd
+  identifier: cicd
+  projectIdentifier: harnesscicdnodejs
   orgIdentifier: default
   tags: {}
   properties:
     ci:
       codebase:
-        connectorRef: git
-        repoName: harness-ci-example
+        connectorRef: github1
+        repoName: harness-ci-example.git
         build: <+input>
   stages:
     - stage:
@@ -28,60 +28,17 @@ pipeline:
             steps:
               - step:
                   type: Run
-                  name: test
-                  identifier: test
+                  name: npm test
+                  identifier: npm_test
                   spec:
                     shell: Sh
                     command: npm test
               - step:
-                  type: Run
-                  name: docker build and push
-                  identifier: docker_build_and_push
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry
+                  identifier: BuildAndPushDockerRegistry
                   spec:
-                    shell: Sh
-                    command: |-
-                      docker build -t veluprabhakaranv/helloworld-nodejs:latest .
-                      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" docker.io
-                      docker push veluprabhakaranv/helloworld-nodejs:latest
-                    envVariables:
-                      DOCKER_USERNAME: veluprabhakaranv
-                      DOCKER_PASSWORD: Prince@1110
-    - stage:
-        name: DEPLOY
-        identifier: DEPLOY
-        description: ""
-        type: Deployment
-        spec:
-          deploymentType: Kubernetes
-          service:
-            serviceRef: svc
-          environment:
-            environmentRef: env
-            deployToAll: false
-            infrastructureDefinitions:
-              - identifier: infra
-          execution:
-            steps:
-              - step:
-                  name: Rollout Deployment
-                  identifier: rolloutDeployment
-                  type: K8sRollingDeploy
-                  timeout: 10m
-                  spec:
-                    skipDryRun: false
-                    pruningEnabled: false
-            rollbackSteps:
-              - step:
-                  name: Rollback Rollout Deployment
-                  identifier: rollbackRolloutDeployment
-                  type: K8sRollingRollback
-                  timeout: 10m
-                  spec:
-                    pruningEnabled: false
-        tags: {}
-        failureStrategies:
-          - onFailure:
-              errors:
-                - AllErrors
-              action:
-                type: StageRollback
+                    connectorRef: account.harnessImage
+                    repo: helloworld-nodejs
+                    tags:
+                      - latest
